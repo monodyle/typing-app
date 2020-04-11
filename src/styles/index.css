@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  color: #000000;
+  font-family: 'Roboto Mono', monospace;
+}
+
+#container {
+  max-width: 40rem;
+}
+
+.anti-select {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.result.hide {
+  filter: blur(3px);
+  transition: filter 0.3s ease;
+}
