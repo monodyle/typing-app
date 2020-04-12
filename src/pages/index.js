@@ -7,27 +7,37 @@ const Home = () => {
   // global
   const [mode, setMode] = useState('count')
   const [lang, setLang] = useState('en')
-  const [totalWords, setTotalWords] = useState(10)
+  const [totalWords, setTotalWords] = useState(25)
   const [text, setText] = useState(wordsGenerator(lang, totalWords))
   const [finished, setFinished] = useState(false)
+
+  const [openSetting, setOpenSetting] = useState(false)
 
   // result
   const [stats, setStats] = useState({
     time: 0,
     correct: { words: 0, keys: 0 }
   })
+  const resetStats = () => {
+    setStats({
+      time: 0,
+      correct: { words: 0, keys: 0 }
+    })
+  }
   const [result, setResult] = useState({ wpm: 0, acc: 0 })
+  const resetResult = () => {
+    setResult({ wpm: 0, acc: 0 })
+  }
 
   // input
   const [userInput, setUserInput] = useState([])
   const [input, setInput] = useState('')
   const [currentWord, setCurrentWord] = useState(0)
-
   // word count mode
   const [startDate, setStartDate] = useState(null)
 
   // time count mode
-  const [timeLeft, setTimeLeft] = useState(10)
+  const [timeLeft, setTimeLeft] = useState(60)
   const [onCooldown, setCooldown] = useState(false)
 
   const getResult = () => {
@@ -128,6 +138,18 @@ const Home = () => {
     }
   }
 
+  const handleReset = () => {
+    setText(wordsGenerator(lang, totalWords))
+    setFinished(false)
+    resetStats()
+    resetResult()
+    setUserInput([])
+    setInput('')
+    setCurrentWord(0)
+    setStartDate(null)
+    setCooldown(false)
+  }
+
   const handleChange = e => {
     setInput(e.target.value)
   }
@@ -136,7 +158,12 @@ const Home = () => {
     <div id='container' className='p-10 mx-auto tablet:p-0 tablet:mt-32'>
       <div className='flex items-end justify-between mb-4'>
         <h2 className='text-2xl font-medium leading-normal'>typings app</h2>
-        <div className='text-smoke'>{timeLeft}</div>
+        <a
+          className='block cursor-pointer text-smoke'
+          title={mode === 'count' ? 'Words on screen' : 'Time remaining...'}
+        >
+          {mode === 'count' ? totalWords + 'w' : timeLeft + 's'}
+        </a>
       </div>
       <div className='p-4 mb-4 rounded bg-lightgray'>
         <div className='px-1 mb-4 leading-relaxed break-words'>
@@ -178,19 +205,118 @@ const Home = () => {
       <div className='flex items-center justify-between'>
         <a
           className='block border-b-2 border-dashed cursor-pointer border-dirtysnow'
-          title='Words on screen'
+          title='Open setting'
+          onClick={() => setOpenSetting(true)}
         >
-          {totalWords}
+          settings
         </a>
         <div>
           Result: WPM{' '}
-          <span className='result anti-select'>
+          <span className={`result anti-select ${!finished ? 'hide' : ''}`}>
             {(result.wpm < 10 ? '0' : '') + result.wpm}
           </span>{' '}
           / ACC{' '}
-          <span className='result anti-select'>
+          <span className={`result anti-select ${!finished ? 'hide' : ''}`}>
             {(result.acc < 10 ? '0' : '') + result.acc}
           </span>
+        </div>
+      </div>
+      <div className='tablet:pb-32'></div>
+      <div id='setting' className={openSetting ? 'block' : 'hidden'}>
+        <div className='container p-8 rounded bg-lightgray'>
+          <h2 className='mb-4 text-2xl font-medium leading-normal'>settings</h2>
+          <div className='mb-3'>
+            <span className='text-granite'>language</span>
+            <a
+              className={`inline-block px-1 ml-4 cursor-pointer ${
+                lang === 'en' ? 'border-b-2 border-dashed' : 'text-smoke'
+              }`}
+              onClick={() => setLang('en')}
+            >
+              english
+            </a>
+            <a
+              className={`inline-block px-1 ml-4 cursor-pointer ${
+                lang === 'vi' ? 'border-b-2 border-dashed' : 'text-smoke'
+              }`}
+              onClick={() => setLang('vi')}
+            >
+              vietnamese
+            </a>
+          </div>
+          <div className='mb-6'>
+            <div className='mb-3'>
+              <span className='text-granite'>testing mode:</span>
+              <a
+                className={`inline-block px-1 ml-4 cursor-pointer ${
+                  mode === 'count' ? 'border-b-2 border-dashed' : 'text-smoke'
+                }`}
+                onClick={() => setMode('count')}
+              >
+                words count
+              </a>
+              <a
+                className={`inline-block px-1 ml-4 cursor-pointer ${
+                  mode === 'time' ? 'border-b-2 border-dashed' : 'text-smoke'
+                }`}
+                onClick={() => setMode('time')}
+              >
+                timing
+              </a>
+            </div>
+            {mode === 'count' && (
+              <div>
+                <div className='mb-3'>
+                  <span className='text-granite'>word length:</span>
+                  {[10, 25, 50, 100, 250].map((i, k) => (
+                    <>
+                      {i === 10 ? '' : '/'}
+                      <a
+                        className={`inline-block px-1 ml-2 mr-2 cursor-pointer ${
+                          totalWords === i
+                            ? 'border-b-2 border-dashed'
+                            : 'text-smoke'
+                        }`}
+                        onClick={() => setTotalWords(i)}
+                      >
+                        {i}
+                      </a>
+                    </>
+                  ))}
+                </div>
+              </div>
+            )}
+            {mode === 'time' && (
+              <div>
+                <div className='mb-3'>
+                  <span className='text-granite'>duration:</span>
+                  {[15, 30, 60, 120, 240].map((i, k) => (
+                    <>
+                      {i === 15 ? '' : '/'}
+                      <a
+                        className={`inline-block px-1 ml-2 mr-2 cursor-pointer ${
+                          timeLeft === i
+                            ? 'border-b-2 border-dashed'
+                            : 'text-smoke'
+                        }`}
+                        onClick={() => setTimeLeft(i)}
+                      >
+                        {i}
+                      </a>
+                    </>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className='text-center'>
+            <a
+              className='inline-block px-4 py-2 font-medium rounded cursor-pointer bg-dirtysnow hover:bg-carbon'
+              onClick={() => setOpenSetting(false)}
+            >
+              close
+            </a>
+          </div>
         </div>
       </div>
     </div>
