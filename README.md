@@ -2,7 +2,7 @@
 
 Another typings testing app, must try!
 
-<p align="center"><img src="/assets/sceenshot.png"></p>
+<p align="center"><img src="/public/assets/screenshot.png"></p>
 
 ## Usage
 
