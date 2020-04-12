@@ -7,7 +7,7 @@ const Home = () => {
   // global
   const [mode, setMode] = useState('count')
   const [lang, setLang] = useState('en')
-  const [totalWords, setTotalWords] = useState(25)
+  const [totalWords, setTotalWords] = useState(10)
   const [text, setText] = useState(wordsGenerator(lang, totalWords))
   const [finished, setFinished] = useState(false)
 
@@ -31,18 +31,21 @@ const Home = () => {
   const [onCooldown, setCooldown] = useState(false)
 
   const getResult = () => {
-    const words = stats.correct.words,
-      keys = stats.correct.keys,
+    const keys = stats.correct.keys,
       time =
         mode === 'count'
           ? (new Date() - startDate) / 1000 / 60
           : (60 - timeLeft) / 60
-    const totalKeys = text.reduce((s, w) => s + w.length + 1, -1)
-    const acc =
-      mode === 'count'
-        ? Math.floor((keys / totalWords) * 100)
-        : Math.floor((keys / totalKeys) * 100)
-    setResult({ wpm: Math.floor(keys / (5 * time)), acc: acc })
+    let totalKeys = -1
+    for (const i in userInput) totalKeys += text[i].length + 1
+    console.log(totalKeys)
+    const acc = Math.floor(
+      (keys / (mode === 'count') ? totalWords : totalKeys) * 100
+    )
+    setResult({
+      wpm: Math.floor(keys / (5 * time)),
+      acc: mode === 'count' ? acc : Math.min(100, acc)
+    })
   }
 
   useInterval(() => {
@@ -81,23 +84,36 @@ const Home = () => {
             // hide word!
           }
         }
-        const lastWord = e.target.value.trim()
-        const newUserInput = [...userInput, lastWord]
+
+        const inputWord = e.target.value.trim()
+        const trueWord = text[currentWord]
+        const newUserInput = [...userInput, inputWord]
         setUserInput(newUserInput)
-        const newStats = {
-          ...newStats,
-          correct: {
-            words:
-              stats.correct.words + (lastWord === text[currentWord] ? 1 : 0),
-            keys:
-              stats.correct.keys +
-              (lastWord === text[currentWord]
-                ? text[currentWord].length + 1
-                : 0)
+        let newStats
+        if (inputWord === trueWord) {
+          newStats = {
+            ...stats,
+            correct: {
+              words: stats.correct.words + 1,
+              keys: stats.correct.keys + trueWord.length + 1
+            }
+          }
+        } else {
+          let correct = 0
+          const len = Math.min(trueWord.length, inputWord.length)
+          const base = trueWord.length === len ? trueWord : inputWord
+          for (const i in base) correct += trueWord[i] === inputWord[i] ? 1 : 0
+          newStats = {
+            ...stats,
+            correct: {
+              words: stats.correct.words,
+              keys: stats.correct.keys + correct
+            }
           }
         }
         setStats(newStats)
         setCurrentWord(currentWord + 1)
+
         if (currentWord + 1 === totalWords) {
           setFinished(true)
           setCooldown(false)
