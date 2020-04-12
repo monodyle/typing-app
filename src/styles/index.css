@@ -50,3 +50,8 @@ body {
   transform: translateX(-50%);
   box-shadow: 0 5px 10px -2px rgba(0,0,0,0.12);
 }
+
+.time-mode {
+  height: 3.6rem;
+  overflow: hidden;
+}

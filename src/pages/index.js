@@ -33,6 +33,7 @@ const Home = () => {
   const [userInput, setUserInput] = useState([])
   const [input, setInput] = useState('')
   const [currentWord, setCurrentWord] = useState(0)
+
   // word count mode
   const [startDate, setStartDate] = useState(null)
 
@@ -59,7 +60,7 @@ const Home = () => {
   }
 
   useInterval(() => {
-    if (!finished && startDate) getResult()
+    if (!finished && (startDate || onCooldown)) getResult()
   }, 1000)
 
   useEffect(() => {
@@ -87,14 +88,8 @@ const Home = () => {
       if (mode === 'time' && !onCooldown) setCooldown(true)
     }
 
-    if (e.key === ' ') {
+    if (e.key === ' ' && e.target.value.trim() !== '') {
       if (!finished) {
-        if (e.target.value !== '') {
-          if (mode === 'time') {
-            // hide word!
-          }
-        }
-
         const inputWord = e.target.value.trim()
         const trueWord = text[currentWord]
         const newUserInput = [...userInput, inputWord]
@@ -166,14 +161,20 @@ const Home = () => {
         </a>
       </div>
       <div className='p-4 mb-4 rounded bg-lightgray'>
-        <div className='px-1 mb-4 leading-relaxed break-words'>
+        <div
+          className={`px-1 mb-4 leading-relaxed break-words ${
+            mode === 'time' ? 'time-mode' : ''
+          }`}
+        >
           {text.map((t, i) => (
             <span
               className={
                 currentWord === i
                   ? 'text-purple'
                   : i < currentWord
-                  ? userInput[i] === t
+                  ? mode === 'time'
+                    ? 'hidden'
+                    : userInput[i] === t
                     ? 'text-green'
                     : 'text-orange'
                   : ''
@@ -251,7 +252,10 @@ const Home = () => {
                 className={`inline-block px-1 ml-4 cursor-pointer ${
                   mode === 'count' ? 'border-b-2 border-dashed' : 'text-smoke'
                 }`}
-                onClick={() => setMode('count')}
+                onClick={() => {
+                  setMode('count')
+                  setTimeLeft(60)
+                }}
               >
                 words count
               </a>
@@ -259,7 +263,10 @@ const Home = () => {
                 className={`inline-block px-1 ml-4 cursor-pointer ${
                   mode === 'time' ? 'border-b-2 border-dashed' : 'text-smoke'
                 }`}
-                onClick={() => setMode('time')}
+                onClick={() => {
+                  setMode('time')
+                  setTotalWords(3200)
+                }}
               >
                 timing
               </a>
@@ -312,7 +319,10 @@ const Home = () => {
           <div className='text-center'>
             <a
               className='inline-block px-4 py-2 font-medium rounded cursor-pointer bg-dirtysnow hover:bg-carbon'
-              onClick={() => setOpenSetting(false)}
+              onClick={() => {
+                setOpenSetting(false)
+                handleReset()
+              }}
             >
               close
             </a>
