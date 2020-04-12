@@ -12,7 +12,8 @@ function MyApp ({ Component, pageProps }) {
       16: '/favicon-16x16.png',
       appleTouch: '/apple-touch-icon.png'
     },
-    url: 'https://typings.app'
+    url: 'https://typings.app',
+    feature: '/assets/sceenshot.png'
   }
 
   return (
@@ -59,7 +60,7 @@ function MyApp ({ Component, pageProps }) {
         <meta property='twitter:description' content={config.description} />
         <meta
           property='twitter:image'
-          content={config.url + 'ssets/og-image.png'}
+          content={config.url + config.feature}
         />
       </Head>
       <main className='main'>

@@ -141,6 +141,7 @@ const Home = () => {
     setUserInput([])
     setInput('')
     setCurrentWord(0)
+    setTimeLeft(timeLeft)
     setStartDate(null)
     setCooldown(false)
   }
@@ -177,7 +178,7 @@ const Home = () => {
                     : userInput[i] === t
                     ? 'text-green'
                     : 'text-orange'
-                  : ''
+                  : 'text-smoke'
               }
               key={i}
             >
@@ -328,6 +329,15 @@ const Home = () => {
             </a>
           </div>
         </div>
+      </div>
+      <div className='text-center'>
+        <a
+          className='border-b-2 border-dashed border-dirtysnow text-smoke'
+          href='https://github.com/monodyle/typings-app/issues'
+          target='blank'
+        >
+          report bugs
+        </a>
       </div>
     </div>
   )
