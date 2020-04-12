@@ -20,4 +20,4 @@ look like somethings went wrong...
 
 Published under BSD 2 Clause License.
 
-Writing with [NextJs](https://github.com/zeit/next.js/)
+Writing with [Next.js](https://nextjs.org/) and [Tailwind](htts://tailwindcss.com/)
