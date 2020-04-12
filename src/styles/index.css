@@ -33,7 +33,7 @@ body {
 }
 
 #setting {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -44,7 +44,7 @@ body {
 #setting .container {
   width: 100%;
   max-width: 40rem;
-  position: absolute;
+  position: fixed;
   top: 12%;
   left: 50%;
   transform: translateX(-50%);

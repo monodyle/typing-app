@@ -3,6 +3,8 @@ import { FiRefreshCcw as RefreshIcon } from 'react-icons/fi'
 import wordsGenerator from '../helper'
 import useInterval from '../hooks/useInterval'
 
+const MAX_WORDS = 3200
+
 const Home = () => {
   // global
   const [mode, setMode] = useState('count')
@@ -81,6 +83,10 @@ const Home = () => {
       return () => clearInterval(interval)
     }
   }, [onCooldown, timeLeft])
+
+  useEffect(() => {
+    setText(wordsGenerator(lang, totalWords))
+  }, [totalWords])
 
   const handleKeyDown = e => {
     if (currentWord === 0 && e.target.value === '') {
@@ -164,7 +170,9 @@ const Home = () => {
       <div className='p-4 mb-4 rounded bg-lightgray'>
         <div
           className={`px-1 mb-4 leading-relaxed break-words ${
-            mode === 'time' ? 'time-mode' : ''
+            mode === 'time' || (mode === 'count' && text.length)
+              ? 'time-mode'
+              : ''
           }`}
         >
           {text.map((t, i) => (
@@ -255,7 +263,7 @@ const Home = () => {
                 }`}
                 onClick={() => {
                   setMode('count')
-                  setTimeLeft(60)
+                  setTotalWords(25)
                 }}
               >
                 words count
@@ -266,7 +274,7 @@ const Home = () => {
                 }`}
                 onClick={() => {
                   setMode('time')
-                  setTotalWords(3200)
+                  setTotalWords(MAX_WORDS)
                 }}
               >
                 timing
@@ -330,7 +338,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className='text-center'>
+      <div className='pb-10 text-center'>
         <a
           className='border-b-2 border-dashed border-dirtysnow text-smoke'
           href='https://github.com/monodyle/typings-app/issues'
