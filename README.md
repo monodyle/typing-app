@@ -14,7 +14,7 @@ Then just type, finish the test to get result under the typing box (which blurre
 
 ## Try it now
 
-look like somethings went wrong...
+Deployed with Zeit: https://typings-app.now.sh/
 
 ## License
 
