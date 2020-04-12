@@ -170,7 +170,7 @@ const Home = () => {
       <div className='p-4 mb-4 rounded bg-lightgray'>
         <div
           className={`px-1 mb-4 leading-relaxed break-words ${
-            mode === 'time' || (mode === 'count' && text.length)
+            mode === 'time' || (mode === 'count' && text.length === MAX_WORDS)
               ? 'time-mode'
               : ''
           }`}
