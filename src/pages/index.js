@@ -155,7 +155,7 @@ const Home = () => {
         <h2 className='text-2xl font-medium leading-normal'>typings app</h2>
         <a
           className='block cursor-pointer text-smoke'
-          title={mode === 'count' ? 'Words on screen' : 'Time remaining...'}
+          title={mode === 'count' ? 'words on screen' : 'time remaining...'}
         >
           {mode === 'count' ? totalWords + 'w' : timeLeft + 's'}
         </a>
@@ -196,7 +196,7 @@ const Home = () => {
           />
           <button
             className='w-8 ml-8'
-            title='Reset'
+            title='reset'
             onClick={() => handleReset()}
           >
             <RefreshIcon />
@@ -206,7 +206,7 @@ const Home = () => {
       <div className='flex items-center justify-between'>
         <a
           className='block border-b-2 border-dashed cursor-pointer border-dirtysnow'
-          title='Open setting'
+          title='open setting'
           onClick={() => setOpenSetting(true)}
         >
           settings
@@ -324,7 +324,7 @@ const Home = () => {
                 handleReset()
               }}
             >
-              close
+              apply
             </a>
           </div>
         </div>
