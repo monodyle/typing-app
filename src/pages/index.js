@@ -44,19 +44,21 @@ const Home = () => {
   const [onCooldown, setCooldown] = useState(false)
 
   const getResult = () => {
-    const keys = stats.correct.keys,
+    const correctKeys = stats.correct.keys,
+      words = correctKeys / 5,
       time =
         mode === 'count'
           ? (new Date() - startDate) / 1000 / 60
-          : (60 - timeLeft) / 60
+          : 1 - timeLeft / 60
     let totalKeys = -1
-    for (const i in userInput) totalKeys += text[i].length + 1
-    console.log(totalKeys)
-    const acc = Math.floor(
-      (keys / (mode === 'count') ? totalWords : totalKeys) * 100
-    )
+    if (mode === 'count') {
+      for (const w of text) totalKeys += w.length + 1
+    } else {
+      for (const i in userInput) totalKeys += text[i].length + 1
+    }
+    const acc = Math.floor((correctKeys / totalKeys) * 100)
     setResult({
-      wpm: Math.floor(keys / (5 * time)),
+      wpm: Math.floor(words / time),
       acc: mode === 'count' ? acc : Math.min(100, acc)
     })
   }
@@ -88,15 +90,21 @@ const Home = () => {
     setText(wordsGenerator(lang, totalWords))
   }, [totalWords])
 
+  const avaiableKeys = ["'", ',', '.', ';']
   const handleKeyDown = e => {
-    if (currentWord === 0 && e.target.value === '') {
+    const inputValue = e.target.value
+    if (
+      currentWord === 0 &&
+      inputValue === '' &&
+      ((e.key >= 'a' && e.key <= 'z') || avaiableKeys.some(k => k === e.key))
+    ) {
       if (mode === 'count') setStartDate(new Date())
       if (mode === 'time' && !onCooldown) setCooldown(true)
     }
 
-    if (e.key === ' ' && e.target.value.trim() !== '') {
+    if (e.key === ' ' && inputValue.trim() !== '') {
       if (!finished) {
-        const inputWord = e.target.value.trim()
+        const inputWord = inputValue.trim()
         const trueWord = text[currentWord]
         const newUserInput = [...userInput, inputWord]
         setUserInput(newUserInput)
@@ -134,6 +142,8 @@ const Home = () => {
           }
           setStats(_newStats)
         }
+
+        getResult()
       }
       setInput('')
     }
