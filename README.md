@@ -20,6 +20,6 @@ Deployed with Zeit: https://typings-app.now.sh/
 
 Published under BSD 2 Clause License.
 
-Writing with [Next.js](https://nextjs.org/) and [Tailwind](htts://tailwindcss.com/)
+Writing with [Next.js](https://nextjs.org/) and [Tailwind](https://tailwindcss.com/)
 
 Dictionary from [1000-most-common](https://github.com/CodeBrauer/1000-most-common-words)

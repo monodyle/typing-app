@@ -10,7 +10,10 @@ const Home = () => {
   const [mode, setMode] = useState('count')
   const [lang, setLang] = useState('en')
   const [totalWords, setTotalWords] = useState(25)
-  const [text, setText] = useState(wordsGenerator(lang, totalWords))
+  const [userText, setUserText] = useState('')
+  const [text, setText] = useState(
+    wordsGenerator({ lang: lang, take: totalWords })
+  )
   const [finished, setFinished] = useState(false)
 
   const [openSetting, setOpenSetting] = useState(false)
@@ -87,8 +90,13 @@ const Home = () => {
   }, [onCooldown, timeLeft])
 
   useEffect(() => {
-    setText(wordsGenerator(lang, totalWords))
+    if (lang !== 'own')
+      setText(wordsGenerator({ lang: lang, take: totalWords }))
   }, [totalWords])
+
+  useEffect(() => {
+    if (lang === 'own') setText(userText.split(' ').filter(w => w !== ''))
+  }, [userText])
 
   const avaiableKeys = ["'", ',', '.', ';']
   const handleKeyDown = e => {
@@ -150,7 +158,12 @@ const Home = () => {
   }
 
   const handleReset = () => {
-    setText(wordsGenerator(lang, totalWords))
+    const _text =
+      lang === 'own'
+        ? userText.split(' ').filter(w => w !== '')
+        : wordsGenerator({ lang: lang, take: totalWords })
+    setText(_text)
+    if (lang === 'own') setTotalWords(_text.length)
     setFinished(false)
     resetStats()
     resetResult()
@@ -164,6 +177,12 @@ const Home = () => {
 
   const handleChange = e => {
     setInput(e.target.value)
+  }
+
+  const onUserParagraph = e => {
+    const value = e.target.value.toLowerCase()
+    const pattern = new RegExp('[^a-zA-Z0-9 -]', 'g')
+    setUserText(value.replace(pattern, '').trim())
   }
 
   return (
@@ -242,29 +261,39 @@ const Home = () => {
         </div>
       </div>
       <div className='tablet:pb-32'></div>
+
+      {/* Setting */}
       <div id='setting' className={openSetting ? 'block' : 'hidden'}>
         <div className='container p-8 rounded bg-lightgray'>
           <h2 className='mb-4 text-2xl font-medium leading-normal'>settings</h2>
-          <div className='mb-3'>
-            <span className='text-granite'>language</span>
-            <a
-              className={`inline-block px-1 ml-4 cursor-pointer ${
-                lang === 'en' ? 'border-b-2 border-dashed' : 'text-smoke'
-              }`}
-              onClick={() => setLang('en')}
-            >
-              english
-            </a>
-            <a
-              className={`inline-block px-1 ml-4 cursor-pointer ${
-                lang === 'vi' ? 'border-b-2 border-dashed' : 'text-smoke'
-              }`}
-              onClick={() => setLang('vi')}
-            >
-              vietnamese
-            </a>
-          </div>
           <div className='mb-6'>
+            <div className='mb-3'>
+              <span className='text-granite'>language</span>
+              <a
+                className={`inline-block px-1 ml-4 cursor-pointer ${
+                  lang === 'en' ? 'border-b-2 border-dashed' : 'text-smoke'
+                }`}
+                onClick={() => setLang('en')}
+              >
+                english
+              </a>
+              <a
+                className={`inline-block px-1 ml-4 cursor-pointer ${
+                  lang === 'vi' ? 'border-b-2 border-dashed' : 'text-smoke'
+                }`}
+                onClick={() => setLang('vi')}
+              >
+                vietnamese
+              </a>
+              <a
+                className={`inline-block px-1 ml-4 cursor-pointer ${
+                  lang === 'own' ? 'border-b-2 border-dashed' : 'text-smoke'
+                }`}
+                onClick={() => setLang('own') && setText('')}
+              >
+                own paragraph
+              </a>
+            </div>
             <div className='mb-3'>
               <span className='text-granite'>testing mode:</span>
               <a
@@ -290,12 +319,12 @@ const Home = () => {
                 timing
               </a>
             </div>
-            {mode === 'count' && (
+            {mode === 'count' && lang !== 'own' && (
               <div>
                 <div className='mb-3'>
                   <span className='text-granite'>word length:</span>
                   {[10, 25, 50, 100, 250].map((i, k) => (
-                    <>
+                    <span key={k}>
                       {i === 10 ? '' : '/'}
                       <a
                         className={`inline-block px-1 ml-2 mr-2 cursor-pointer ${
@@ -307,7 +336,7 @@ const Home = () => {
                       >
                         {i}
                       </a>
-                    </>
+                    </span>
                   ))}
                 </div>
               </div>
@@ -317,7 +346,7 @@ const Home = () => {
                 <div className='mb-3'>
                   <span className='text-granite'>duration:</span>
                   {[15, 30, 60, 120, 240].map((i, k) => (
-                    <>
+                    <span key={k}>
                       {i === 15 ? '' : '/'}
                       <a
                         className={`inline-block px-1 ml-2 mr-2 cursor-pointer ${
@@ -329,9 +358,20 @@ const Home = () => {
                       >
                         {i}
                       </a>
-                    </>
+                    </span>
                   ))}
                 </div>
+              </div>
+            )}
+            {lang === 'own' && (
+              <div className='mb-3'>
+                <span className='block mb-3 text-granite'>your paragraph</span>
+                <textarea
+                  className='w-full h-32 p-4 text-base rounded border-smoke'
+                  style={{ resize: 'none' }}
+                  onChange={e => onUserParagraph(e)}
+                  value={userText}
+                />
               </div>
             )}
           </div>

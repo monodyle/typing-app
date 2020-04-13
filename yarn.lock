@@ -5476,6 +5476,11 @@ tty-browserify@0.0.0:
   resolved "https://registry.yarnpkg.com/tty-browserify/-/tty-browserify-0.0.0.tgz#a157ba402da24e9bf957f9aa69d524eed42901a6"
   integrity sha1-oVe6QC2iTpv5V/mqadUk7tQpAaY=
 
+txtgen@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/txtgen/-/txtgen-2.2.4.tgz#c61784c84bc9c000e1fb166e9b0dcbe16712795e"
+  integrity sha512-eVt2Luabn0BG6K3DfHkqEBkldVYpAKgneVteEljzM5a0gLoff6sZI9SQMCm0GSyYhQQiSgiJ4HZaV9iYR+gm4g==
+
 type-check@~0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.3.2.tgz#5884cab512cf1d355e3fb784f30804b2b520db72"
