@@ -1,45 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react'
 
 const Timer = () => {
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [onCooldown, setCooldown] = useState(false);
+  const [input, setInput] = useState('')
+  const [text, setText] = useState([])
+  const [count, setCount] = useState(0)
 
-  function toggle() {
-    setCooldown(!onCooldown);
-  }
-
-  function reset() {
-    setTimeLeft(0);
-    setCooldown(false);
-  }
-
-  useEffect(() => {
-    let interval = null;
-    if (onCooldown) {
-      interval = setInterval(() => {
-        setTimeLeft(timeLeft => timeLeft - 1);
-      }, 1000);
-    } else if (!onCooldown && timeLeft !== 0) {
-      clearInterval(interval);
+  const handleChange = e => {
+    const _input = e.target.value
+    const lastInput = _input.slice(_input.length - 1, _input.length)
+    if (lastInput !== ' ') {
+      setInput(_input)
+    } else {
+      setCount(count + 1)
+      setText([...text, e.target.value.trim()])
+      setInput('')
     }
-    return () => clearInterval(interval);
-  }, [onCooldown, timeLeft]);
+  }
 
   return (
-    <div className="app">
-      <div className="time">
-        {timeLeft}s
-      </div>
-      <div className="row">
-        <button className={`button button-primary button-primary-${onCooldown ? 'active' : 'inactive'}`} onClick={toggle}>
-          {onCooldown ? 'Pause' : 'Start'}
-        </button>
-        <button className="button" onClick={reset}>
-          Reset
-        </button>
+    <div id='container' className='p-10 mx-auto tablet:p-0 tablet:mt-32'>
+      <div className='p-4 mb-4 rounded bg-lightgray'>
+        <div className="text-smoke">{text.map((w, k) => (
+          <span key={k}>{w} </span>
+        ))}</div>
+        <div className='mb-4 text-left'>spaces: {count}</div>
+        <input
+          type='text'
+          className='w-full px-4 py-2 rounded'
+          autoFocus={true}
+          onChange={handleChange}
+          value={input.trim()}
+        />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Timer;
+export default Timer
