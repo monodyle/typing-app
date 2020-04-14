@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { FiRefreshCcw as RefreshIcon } from 'react-icons/fi'
 import wordsGenerator from '../helper'
 import useInterval from '../hooks/useInterval'
+import Setting from '../components/setting'
 
 const MAX_WORDS = 3200
+const avaiableKeys = ["'", ',', '.', ';']
 
 const Home = () => {
   // global
@@ -98,21 +100,43 @@ const Home = () => {
     if (lang === 'own') setText(userText.split(' ').filter(w => w !== ''))
   }, [userText])
 
-  const avaiableKeys = ["'", ',', '.', ';']
-  const handleKeyDown = e => {
-    const inputValue = e.target.value
+  const handleReset = () => {
+    const _text =
+      lang === 'own'
+        ? userText.split(' ').filter(w => w !== '')
+        : wordsGenerator({ lang: lang, take: totalWords })
+    setText(_text)
+    if (lang === 'own') setTotalWords(_text.length)
+    setFinished(false)
+    resetStats()
+    resetResult()
+    setUserInput([])
+    setInput('')
+    setCurrentWord(0)
+    setTimeLeft(timeLeft)
+    setStartDate(null)
+    setCooldown(false)
+  }
+
+  const handleChange = e => {
+    const _input = e.target.value
+    const lastChar = _input.slice(_input.length - 1, _input.length)
     if (
       currentWord === 0 &&
-      inputValue === '' &&
-      ((e.key >= 'a' && e.key <= 'z') || avaiableKeys.some(k => k === e.key))
+      _input.length === 1 &&
+      ((lastChar >= 'a' && lastChar <= 'z') ||
+        avaiableKeys.some(k => k === lastChar))
     ) {
-      if (mode === 'count') setStartDate(new Date())
+      console.log('Start!')
+      setStartDate(new Date())
       if (mode === 'time' && !onCooldown) setCooldown(true)
     }
 
-    if (e.key === ' ' && inputValue.trim() !== '') {
-      if (!finished) {
-        const inputWord = inputValue.trim()
+    if (lastChar !== ' ') {
+      setInput(_input)
+    } else {
+      if (_input.trim() !== '' && !finished) {
+        const inputWord = _input.trim()
         const trueWord = text[currentWord]
         const newUserInput = [...userInput, inputWord]
         setUserInput(newUserInput)
@@ -157,31 +181,9 @@ const Home = () => {
     }
   }
 
-  const handleReset = () => {
-    const _text =
-      lang === 'own'
-        ? userText.split(' ').filter(w => w !== '')
-        : wordsGenerator({ lang: lang, take: totalWords })
-    setText(_text)
-    if (lang === 'own') setTotalWords(_text.length)
-    setFinished(false)
-    resetStats()
-    resetResult()
-    setUserInput([])
-    setInput('')
-    setCurrentWord(0)
-    setTimeLeft(timeLeft)
-    setStartDate(null)
-    setCooldown(false)
-  }
-
-  const handleChange = e => {
-    setInput(e.target.value)
-  }
-
   const onUserParagraph = e => {
     const value = e.target.value.toLowerCase()
-    const pattern = new RegExp('[^a-zA-Z0-9 -]', 'g')
+    const pattern = new RegExp('[^a-zA-Z0-9 -.,]', 'g')
     setUserText(value.replace(pattern, '').trim())
   }
 
@@ -228,7 +230,6 @@ const Home = () => {
             type='text'
             className='w-full px-4 py-2 rounded'
             autoFocus={true}
-            onKeyDown={handleKeyDown}
             onChange={handleChange}
             value={input.trim()}
           />
@@ -263,131 +264,22 @@ const Home = () => {
       <div className='tablet:pb-32'></div>
 
       {/* Setting */}
-      <div id='setting' className={openSetting ? 'block' : 'hidden'}>
-        <div className='container p-8 rounded bg-lightgray'>
-          <h2 className='mb-4 text-2xl font-medium leading-normal'>settings</h2>
-          <div className='mb-6'>
-            <div className='mb-3'>
-              <span className='text-granite'>language</span>
-              <a
-                className={`inline-block px-1 ml-4 cursor-pointer ${
-                  lang === 'en' ? 'border-b-2 border-dashed' : 'text-smoke'
-                }`}
-                onClick={() => setLang('en')}
-              >
-                english
-              </a>
-              <a
-                className={`inline-block px-1 ml-4 cursor-pointer ${
-                  lang === 'vi' ? 'border-b-2 border-dashed' : 'text-smoke'
-                }`}
-                onClick={() => setLang('vi')}
-              >
-                vietnamese
-              </a>
-              <a
-                className={`inline-block px-1 ml-4 cursor-pointer ${
-                  lang === 'own' ? 'border-b-2 border-dashed' : 'text-smoke'
-                }`}
-                onClick={() => setLang('own') && setText('')}
-              >
-                own paragraph
-              </a>
-            </div>
-            <div className='mb-3'>
-              <span className='text-granite'>testing mode:</span>
-              <a
-                className={`inline-block px-1 ml-4 cursor-pointer ${
-                  mode === 'count' ? 'border-b-2 border-dashed' : 'text-smoke'
-                }`}
-                onClick={() => {
-                  setMode('count')
-                  setTotalWords(25)
-                }}
-              >
-                words count
-              </a>
-              <a
-                className={`inline-block px-1 ml-4 cursor-pointer ${
-                  mode === 'time' ? 'border-b-2 border-dashed' : 'text-smoke'
-                }`}
-                onClick={() => {
-                  setMode('time')
-                  setTotalWords(MAX_WORDS)
-                }}
-              >
-                timing
-              </a>
-            </div>
-            {mode === 'count' && lang !== 'own' && (
-              <div>
-                <div className='mb-3'>
-                  <span className='text-granite'>word length:</span>
-                  {[10, 25, 50, 100, 250].map((i, k) => (
-                    <span key={k}>
-                      {i === 10 ? '' : '/'}
-                      <a
-                        className={`inline-block px-1 ml-2 mr-2 cursor-pointer ${
-                          totalWords === i
-                            ? 'border-b-2 border-dashed'
-                            : 'text-smoke'
-                        }`}
-                        onClick={() => setTotalWords(i)}
-                      >
-                        {i}
-                      </a>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {mode === 'time' && (
-              <div>
-                <div className='mb-3'>
-                  <span className='text-granite'>duration:</span>
-                  {[15, 30, 60, 120, 240].map((i, k) => (
-                    <span key={k}>
-                      {i === 15 ? '' : '/'}
-                      <a
-                        className={`inline-block px-1 ml-2 mr-2 cursor-pointer ${
-                          timeLeft === i
-                            ? 'border-b-2 border-dashed'
-                            : 'text-smoke'
-                        }`}
-                        onClick={() => setTimeLeft(i)}
-                      >
-                        {i}
-                      </a>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {lang === 'own' && (
-              <div className='mb-3'>
-                <span className='block mb-3 text-granite'>your paragraph</span>
-                <textarea
-                  className='w-full h-32 p-4 text-base rounded border-smoke'
-                  style={{ resize: 'none' }}
-                  onChange={e => onUserParagraph(e)}
-                  value={userText}
-                />
-              </div>
-            )}
-          </div>
-          <div className='text-center'>
-            <a
-              className='inline-block px-4 py-2 font-medium rounded cursor-pointer bg-dirtysnow hover:bg-carbon'
-              onClick={() => {
-                setOpenSetting(false)
-                handleReset()
-              }}
-            >
-              apply
-            </a>
-          </div>
-        </div>
-      </div>
+      <Setting
+        MAX_WORDS={MAX_WORDS}
+        openSetting={openSetting}
+        setOpenSetting={setOpenSetting}
+        lang={lang}
+        setLang={setLang}
+        mode={mode}
+        setMode={setMode}
+        totalWords={totalWords}
+        setTotalWords={setTotalWords}
+        timeLeft={timeLeft}
+        setTimeLeft={setTimeLeft}
+        userText={userText}
+        onUserParagraph={onUserParagraph}
+        handleReset={handleReset}
+      />
       <div className='pb-10 text-center'>
         <a
           className='border-b-2 border-dashed border-dirtysnow text-smoke'
