@@ -15,7 +15,10 @@ const Setting = ({
   handleReset
 }) => {
   return (
-    <div id='setting' className={openSetting ? 'block' : 'hidden'}>
+    <div
+      id='setting'
+      className={`${openSetting ? 'block' : 'hidden'} floating`}
+    >
       <div className='container p-8 rounded bg-lightgray'>
         <h2 className='mb-4 text-2xl font-medium leading-normal'>settings</h2>
         <div className='mb-6'>

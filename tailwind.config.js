@@ -16,7 +16,10 @@ module.exports = {
       purple: '#8338EC',
       blue: '#23C8D2',
       red: '#EA344F',
+      'light-red': '#f7aeb9',
       green: '#72D54B',
+      'light-green': '#e6ffed',
+      'mid-green': '#acf2bd',
       yellow: '#F7AC2A'
     },
     fontFamily: {

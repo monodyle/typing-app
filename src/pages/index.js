@@ -3,6 +3,7 @@ import { FiRefreshCcw as RefreshIcon } from 'react-icons/fi'
 import wordsGenerator from '../helper'
 import useInterval from '../hooks/useInterval'
 import Setting from '../components/setting'
+import StaticsBoard from '../components/statics'
 
 const MAX_WORDS = 3200
 const avaiableKeys = ["'", ',', '.', ';']
@@ -19,6 +20,7 @@ const Home = () => {
   const [finished, setFinished] = useState(false)
 
   const [openSetting, setOpenSetting] = useState(false)
+  const [openStatics, setOpenStatics] = useState(false)
 
   // result
   const [stats, setStats] = useState({
@@ -58,7 +60,8 @@ const Home = () => {
     let totalKeys = -1
     if (mode === 'count') {
       for (const w of text) totalKeys += w.length + 1
-    } else {
+    }
+    if (mode === 'time') {
       for (const i in userInput) totalKeys += text[i].length + 1
     }
     const acc = Math.floor((correctKeys / totalKeys) * 100)
@@ -127,7 +130,6 @@ const Home = () => {
       ((lastChar >= 'a' && lastChar <= 'z') ||
         avaiableKeys.some(k => k === lastChar))
     ) {
-      console.log('Start!')
       setStartDate(new Date())
       if (mode === 'time' && !onCooldown) setCooldown(true)
     }
@@ -179,6 +181,8 @@ const Home = () => {
       }
       setInput('')
     }
+
+    getResult()
   }
 
   const onUserParagraph = e => {
@@ -190,7 +194,7 @@ const Home = () => {
   return (
     <div id='container' className='p-10 mx-auto tablet:p-0 tablet:mt-32'>
       <div className='flex items-end justify-between mb-4'>
-        <h2 className='text-2xl font-medium leading-normal'>typings app</h2>
+        <h2 className='text-2xl font-bold leading-normal'>typings app</h2>
         <a
           className='block cursor-pointer text-smoke'
           title={mode === 'count' ? 'words on screen' : 'time remaining...'}
@@ -228,13 +232,13 @@ const Home = () => {
         <div className='flex items-center justify-between'>
           <input
             type='text'
-            className='w-full px-4 py-2 rounded'
+            className='w-full px-3 py-2 mr-6 rounded'
             autoFocus={true}
             onChange={handleChange}
             value={input.trim()}
           />
           <button
-            className='w-8 ml-8'
+            className='p-2 mr-4'
             title='reset'
             onClick={() => handleReset()}
           >
@@ -243,13 +247,24 @@ const Home = () => {
         </div>
       </div>
       <div className='flex items-center justify-between'>
-        <a
-          className='block border-b-2 border-dashed cursor-pointer border-dirtysnow'
-          title='open setting'
-          onClick={() => setOpenSetting(true)}
-        >
-          settings
-        </a>
+        <div className='flex'>
+          <a
+            className='block border-b-2 border-dashed cursor-pointer border-dirtysnow'
+            title='open setting'
+            onClick={() => setOpenSetting(true)}
+          >
+            settings
+          </a>
+          {finished && (
+            <a
+              className='block ml-4 border-b-2 border-dashed cursor-pointer border-dirtysnow'
+              title='statics'
+              onClick={() => setOpenStatics(true)}
+            >
+              statics
+            </a>
+          )}
+        </div>
         <div>
           Result: WPM{' '}
           <span className={`result anti-select ${!finished ? 'hide' : ''}`}>
@@ -280,6 +295,16 @@ const Home = () => {
         onUserParagraph={onUserParagraph}
         handleReset={handleReset}
       />
+      {finished && (
+        <StaticsBoard
+          setOpenStatics={setOpenStatics}
+          openStatics={openStatics}
+          text={text}
+          userInput={userInput}
+          stats={stats}
+          result={result}
+        />
+      )}
       <div className='pb-10 text-center'>
         <a
           className='border-b-2 border-dashed border-dirtysnow text-smoke'
