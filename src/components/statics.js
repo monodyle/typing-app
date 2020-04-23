@@ -15,21 +15,22 @@ const StaticsBoard = ({
         <div className='mb-6'>
           <div className='mb-3 leading-relaxed break-words'>
             {text.map((w, i) => (
-              <span className='bg-light-green'>
-                {Diff.diffChars(w, userInput[i]).map((input, k) => (
-                  <span
-                    key={k}
-                    className={`text-granite ${
-                      input.added
-                        ? 'bg-light-red'
-                        : input.removed
-                        ? 'bg-mid-green'
-                        : 'bg-light-green'
-                    } rounded-sm`}
-                  >
-                    {input.value}
-                  </span>
-                ))}{' '}
+              <span className='mr-2 bg-light-green'>
+                {w.trim() !== userInput[i].trim() &&
+                  Diff.diffChars(w, userInput[i]).map((input, k) => (
+                    <span
+                      key={k}
+                      className={`text-granite ${
+                        input.added
+                          ? 'bg-light-red'
+                          : input.removed
+                          ? 'bg-mid-green'
+                          : 'bg-light-green'
+                      } rounded-sm`}
+                    >
+                      {input.value}
+                    </span>
+                  ))}{' '}
               </span>
             ))}
           </div>
@@ -46,7 +47,7 @@ const StaticsBoard = ({
             <span className='text-red'>{result.acc}</span>
           </div>
         </div>
-        <div className='text-center'>
+        <div className='mb-6 text-center'>
           <a
             className='inline-block px-4 py-2 font-medium rounded cursor-pointer bg-dirtysnow hover:bg-carbon'
             onClick={() => {

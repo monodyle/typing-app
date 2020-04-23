@@ -130,7 +130,7 @@ const Setting = ({
             </div>
           )}
         </div>
-        <div className='text-center'>
+        <div className='mb-6 text-center'>
           <a
             className='inline-block px-4 py-2 font-medium rounded cursor-pointer bg-dirtysnow hover:bg-carbon'
             onClick={() => {
