@@ -14,12 +14,11 @@ const StaticsBoard = ({
         <h2 className='mb-4 text-2xl font-medium leading-normal'>statics</h2>
         <div className='mb-6'>
           <div className='mb-3 leading-relaxed break-words'>
-            {text.map((w, i) => (
-              <span className='mr-2 bg-light-green'>
-                {w.trim() !== userInput[i].trim() &&
-                  Diff.diffChars(w, userInput[i]).map((input, k) => (
+            {text.map((w, i) => {
+              w !== userInput[i] &&
+                Diff.diffChars(w, userInput[i]).map((input, k) => (
+                  <span className='mr-2 bg-light-green' key={k}>
                     <span
-                      key={k}
                       className={`text-granite ${
                         input.added
                           ? 'bg-light-red'
@@ -30,9 +29,9 @@ const StaticsBoard = ({
                     >
                       {input.value}
                     </span>
-                  ))}{' '}
-              </span>
-            ))}
+                  </span>
+                ))
+            })}
           </div>
           <div className='mb-3'>
             <span className='mr-2 text-granite'>total keys you typed:</span>

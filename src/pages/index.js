@@ -140,8 +140,7 @@ const Home = () => {
       if (_input.trim() !== '' && !finished) {
         const inputWord = _input.trim()
         const trueWord = text[currentWord]
-        const newUserInput = [...userInput, inputWord]
-        setUserInput(newUserInput)
+        setUserInput((o) => [...o, inputWord])
         let newStats
         if (inputWord === trueWord) {
           newStats = {
@@ -255,7 +254,7 @@ const Home = () => {
           >
             settings
           </a>
-          {finished && (
+          {finished && (mode === 'count') && (
             <a
               className='block ml-4 border-b-2 border-dashed cursor-pointer border-dirtysnow'
               title='statics'
@@ -295,7 +294,7 @@ const Home = () => {
         onUserParagraph={onUserParagraph}
         handleReset={handleReset}
       />
-      {finished && (
+      {finished && (mode === 'count') && (
         <StaticsBoard
           setOpenStatics={setOpenStatics}
           openStatics={openStatics}
