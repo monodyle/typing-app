@@ -1,25 +1,26 @@
-# Typings app
+# svelte-vite-typescript
 
-Another typings testing app, must try!
+> Test of [Vite](https://github.com/vitejs/vite) as a bundler for Svelte :8ball:
 
-<p align="center"><img src="/public/assets/screenshot.png"></p>
 
-## Usage
+Code for my blog post [Is Vite currently the best bundler for Svelte?](https://codechips.me/svelte-with-vitejs-typescript-tailwind/).
 
-2 mode: **Word counting** and **Timing**
- * Word counting: Select word length you want to test your skill (default is 25)
- * Timing: A cooldown for race typing
+## My Requirements
 
-Then just type, finish the test to get result under the typing box (which blurred).
+- It must be fast
+- It must support Typescript
+- It must support PostCSS
+- It must produce small and efficient bundles
+- It must produce correct sourcemaps for debugging
+- It should support HMR (Hot Module Replacement)
 
-## Try it now
+## How to run
 
-Deployed with Zeit: https://typings-app.now.sh/
+Clone the repo and run `pnpm i && pnpm start`.
 
-## License
+To build do a `pnpm run build`
 
-Published under BSD 2 Clause License.
+## There is more!
 
-Writing with [Next.js](https://nextjs.org/) and [Tailwind](https://tailwindcss.com/)
+For more interesting stuff like this follow me on [Twitter](https://twitter.com/codechips) or check out my blog https://codechips.me.
 
-Dictionary from [1000-most-common](https://github.com/CodeBrauer/1000-most-common-words)

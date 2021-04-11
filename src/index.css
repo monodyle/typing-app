@@ -1,0 +1,31 @@
+@tailwind base;
+
+*,
+*::before *::after {
+  box-sizing: border-box;
+}
+
+body {
+  @apply p-0 m-0 font-mono text-gray-800;
+}
+
+@tailwind components;
+@tailwind utilities;
+
+a {
+  @apply text-gray-600;
+}
+
+a:hover {
+  @apply text-gray-500;
+}
+
+button {
+  @apply flex items-center justify-center px-3 leading-9 border border-gray-800 cursor-pointer;
+  box-shadow: 2px 2px 0 theme('colors.gray.800');
+}
+
+button:hover {
+  box-shadow: 2px 2px 0 theme('colors.gray.800') inset;
+  transform: translate(2px 2px);
+}
