@@ -2,7 +2,14 @@
   import { onMount } from "svelte"
   import { content } from "../stores/content"
   import { getResult, getTimer } from "../stores/result"
-  import { completed, current, finished, value, start } from "../stores/typing"
+  import {
+    completed,
+    current,
+    finished,
+    value,
+    start,
+    completedCount,
+  } from "../stores/typing"
 
   $: next = $current + 1
   $: lines = $content
@@ -10,6 +17,10 @@
     .split("\n")
     .map((l) => l.trim())
   $: total_line = lines.length
+  $: total_words = lines.reduce(
+    (prev, curr) => prev + curr.split("s").length,
+    0
+  )
 
   const correct = (letter: string, index: number) => $value[index] === letter
 
@@ -59,7 +70,7 @@
 
   let ref = null
   onMount(() => {
-    ref.focus()
+    ref?.focus()
   })
 </script>
 
@@ -79,32 +90,50 @@
   .input:focus {
     @apply bg-gray-100 outline-none;
   }
+  .empty {
+    @apply flex items-center justify-center h-16 text-xl text-gray-300;
+  }
   .correct {
     @apply text-gray-700;
   }
   .incorrect {
     @apply text-orange-400 underline;
   }
+  .process {
+    @apply absolute bottom-0 left-0 right-0 h-2 bg-gray-200;
+  }
+  .process .completed {
+    @apply h-full bg-gray-600 transition-all duration-100 ease-linear;
+  }
 </style>
 
+<div class="process">
+  <div
+    class="completed"
+    style={'width: ' + ($completedCount * 100) / total_words + '%'} />
+</div>
 <div class="entry">
-  <div class="demo">
-    <div class="next">
-      {#if next < total_line}{lines[next]}{:else}<br />{/if}
+  {#if $content}
+    <div class="demo">
+      <div class="next">
+        {#if next < total_line}{lines[next]}{:else}<br />{/if}
+      </div>
+      <div class="current">
+        {#each lines[$current].split('') as letter, key}
+          <span
+            class={$value.length > key ? (correct(letter, key) ? 'correct' : 'incorrect') : ''}>{letter}</span>
+        {/each}
+      </div>
     </div>
-    <div class="current">
-      {#each lines[$current].split('') as letter, key}
-        <span
-          class={$value.length > key ? (correct(letter, key) ? 'correct' : 'incorrect') : ''}>{letter}</span>
-      {/each}
-    </div>
-  </div>
-  <input
-    type="text"
-    class="input"
-    placeholder="Start typing..."
-    bind:this={ref}
-    on:keydown={handleKeyDown}
-    on:input={handleInput}
-    bind:value={$value} />
+    <input
+      type="text"
+      class="input"
+      placeholder="Start typing..."
+      bind:this={ref}
+      on:keydown={handleKeyDown}
+      on:input={handleInput}
+      bind:value={$value} />
+  {:else}
+    <div class="empty">Loading...</div>
+  {/if}
 </div>

@@ -1,7 +1,17 @@
 import { readable } from "svelte/store"
+import { lyricsApi, songs } from "../config"
+import { randomItem } from "../utils"
+
+const getRandomSong = (): [string, string] => {
+  const artist = randomItem(Object.keys(songs))
+  const song = randomItem(songs[artist])
+  return [artist, song]
+}
 
 export const content = readable("", function start (set) {
-  set(`I caught it bad just today
-You hit me with a call to your place
-Ain't been out in a while anyway`)
+  fetch(lyricsApi + encodeURI(getRandomSong().join("/")))
+    .then(res => res.json())
+    .then(data => {
+      if (data?.lyrics) set(data.lyrics.replace(/\n{2,}/g, "\n").trim())
+    })
 })

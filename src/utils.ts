@@ -10,3 +10,5 @@ export const reset = () => {
   finished.set(false)
   value.set("")
 }
+
+export const randomItem = (arr: any[]) => arr[Math.floor(Math.random() * arr.length)]

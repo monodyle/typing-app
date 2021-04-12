@@ -1,7 +1,7 @@
 import { get, writable } from "svelte/store"
 import type { ResultType } from "../types/result.type"
 import { content } from "./content"
-import { completed, start, value } from "./typing"
+import { completed, completedCount, start, value } from "./typing"
 import { diffChars } from "diff"
 
 export const original: ResultType = {
@@ -44,10 +44,12 @@ export const getResult = () => {
   })
 
   const chars = user.join(" ").replace(/\s/gm, "")
+  const words = user.join(" ").split(" ")
+  completedCount.set(words.length)
   const mins = get(timer) / 60000
 
   updateResult(
-    Math.round(user.join(" ").split(" ").length / mins),
+    Math.round(words.length / mins),
     Math.round(chars.length / mins),
     Math.floor((correct * 100) / user.reduce((p, c) => p + c.length, 0))
   )
