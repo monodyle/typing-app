@@ -97,7 +97,7 @@
     @apply text-gray-700;
   }
   .incorrect {
-    @apply text-orange-400 underline;
+    @apply text-red-400 underline;
   }
   .process {
     @apply absolute bottom-0 left-0 right-0 h-2 bg-gray-200;

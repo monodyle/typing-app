@@ -1,19 +1,15 @@
 module.exports = {
+  purge: ['./index.html', './src/**/*.{js,ts,svelte}'],
   future: {
-    removeDeprecatedGapUtilities: true
+    purgeLayersByDefault: true,
+    removeDeprecatedGapUtilities: true,
   },
-  experimental: {
-    uniformColorPalette: true,
-    extendedFontSizeScale: true,
-    applyComplexClasses: true
-  },
-  purge: {
-    content: ["./src/**/*.svelte"],
-    whitelistPatterns: [/svelte-/]
-  },
+  darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {}
+    extend: {},
   },
-  variants: {},
-  plugins: []
-};
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+}

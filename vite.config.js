@@ -1,13 +1,7 @@
-import svelte from "vite-plugin-svelte";
-import autopreprocess from "svelte-preprocess";
+import { defineConfig } from 'vite'
+import svelte from '@sveltejs/vite-plugin-svelte'
 
-const preprocess = autopreprocess({
-  postcss: {
-    plugins: [require("tailwindcss")]
-  }
-});
-
-export default {
-  plugins: [svelte({ preprocess })],
-  rollupDedupe: ["svelte"]
-};
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [svelte()]
+})
