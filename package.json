@@ -10,7 +10,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "next",
     "autoprefixer": "^9",
-    "postcss": "^7",
+    "postcss": "^8",
     "svelte": "^3.37.0",
     "svelte-preprocess": "^4.7.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
